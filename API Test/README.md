@@ -16,7 +16,7 @@ After cloning the project in your local environment you should follow these step
 3. Select the "File" tab.
 4. Click on the "Upload Files" button.
 5. Go to the path where you cloned the repository.
-6. Select the postman collection (Collection v2.1).
+6. Select the postman collection "API Automation.postman_collection.json" (Collection v2.1).
 7. Click on the "Open" button.
 8. The postman collection should be imported in your postman local environment.
 
