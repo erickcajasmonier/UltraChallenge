@@ -1,10 +1,11 @@
 # API Automation Test
 
 Requirements:
-a) Use https://gorest.co.in/
-b) Choose one of available endpoints
-c) Automate the testing of endpoint via a Postman collection(s)
-d) Provide the readme to the solution
+
+- Use https://gorest.co.in/
+- Choose one of available endpoints
+- Automate the testing of endpoint via a Postman collection(s)
+- Provide the readme to the solution
 
 ## Installation
 
