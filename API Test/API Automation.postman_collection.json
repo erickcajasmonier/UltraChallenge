@@ -1,0 +1,790 @@
+{
+	"info": {
+		"_postman_id": "0773624c-dd15-4fb7-830d-2218c59db79d",
+		"name": "API Automation",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const schema = {",
+							"        type: \"object\",",
+							"        properties:{",
+							"         \"id\": {",
+							"            \"type\":\"integer\"",
+							"             },",
+							"         \"name\": {",
+							"             \"type\":\"string\"",
+							"             },",
+							"         \"email\": {",
+							"             \"type\":\"string\"",
+							"            },",
+							"         \"gender\": {",
+							"             \"type\":\"string\"",
+							"            },",
+							"         \"status\": {",
+							"             \"type\":\"string\"",
+							"            }",
+							"        },",
+							"        \"required\": [\"id\", \"name\", \"email\", \"gender\", \"status\"]",
+							"    };",
+							"",
+							"",
+							"pm.test('Response schema type nodes verification', function() {",
+							"  pm.expect(tv4.validate(pm.response.json(), schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 2000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"pm.test('Validate data from user', function() {",
+							"    const requestBody = JSON.parse(pm.request.body.raw);",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson.name).to.eql(requestBody.name);",
+							"    pm.expect(responseJson.email).to.eql(requestBody.email);",
+							"    pm.expect(responseJson.gender).to.eql(requestBody.gender);",
+							"    pm.expect(responseJson.status).to.eql(requestBody.status);",
+							"});",
+							"",
+							"// Save created user data",
+							"const jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"userId\", jsonData.id);",
+							"postman.setEnvironmentVariable(\"userName\", jsonData.name);",
+							"postman.setEnvironmentVariable(\"userEmail\", jsonData.email);",
+							"postman.setEnvironmentVariable(\"userGender\", jsonData.gender);",
+							"postman.setEnvironmentVariable(\"userStatus\", jsonData.status);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\":\"Ultra Challenge\", \"gender\":\"male\", \"email\":\"ultra_challenge@mail.com\", \"status\":\"active\"}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}users",
+					"host": [
+						"{{baseUrl}}users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get created user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const schema = {",
+							"        type: \"object\",",
+							"        properties:{",
+							"         \"id\": {",
+							"            \"type\":\"integer\"",
+							"             },",
+							"         \"name\": {",
+							"             \"type\":\"string\"",
+							"             },",
+							"         \"email\": {",
+							"             \"type\":\"string\"",
+							"            },",
+							"         \"gender\": {",
+							"             \"type\":\"string\"",
+							"            },",
+							"         \"status\": {",
+							"             \"type\":\"string\"",
+							"            }",
+							"        },",
+							"        \"required\": [\"id\", \"name\", \"email\", \"gender\", \"status\"]",
+							"    };",
+							"",
+							"",
+							"pm.test('Response schema type nodes verification', function() {",
+							"  pm.expect(tv4.validate(pm.response.json(), schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 500ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);",
+							"});",
+							"",
+							"pm.test('Validate data from user', function() {",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson.id).to.eql(parseInt(pm.environment.get(\"userId\")));",
+							"    pm.expect(responseJson.name).to.eql(pm.environment.get(\"userName\"));",
+							"    pm.expect(responseJson.email).to.eql(pm.environment.get(\"userEmail\"));",
+							"    pm.expect(responseJson.gender).to.eql(pm.environment.get(\"userGender\"));",
+							"    pm.expect(responseJson.status).to.eql(pm.environment.get(\"userStatus\"));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}users/{{userId}}",
+					"host": [
+						"{{baseUrl}}users"
+					],
+					"path": [
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get list of users after create user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const schema = {",
+							"    \"type\": \"array\",",
+							"    \"items\": [{",
+							"        type: \"object\",",
+							"        properties:{",
+							"         \"id\": {",
+							"            \"type\":\"integer\"",
+							"             },",
+							"         \"name\": {",
+							"             \"type\":\"string\"",
+							"             },",
+							"         \"email\": {",
+							"             \"type\":\"string\"",
+							"            },",
+							"         \"gender\": {",
+							"             \"type\":\"string\"",
+							"            },",
+							"         \"status\": {",
+							"             \"type\":\"string\"",
+							"            }",
+							"        },",
+							"        \"required\": [\"id\", \"name\", \"email\", \"gender\", \"status\"]",
+							"    }]",
+							"};",
+							"",
+							"",
+							"pm.test('Response schema type nodes verification', function() {",
+							"  pm.expect(tv4.validate(pm.response.json(), schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 2000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"pm.test(\"Validate new created user is in the list\", function () {",
+							"    const responseBody = pm.response.json();",
+							"",
+							"    for(let i=0; i<responseBody.length; i++){",
+							"        if(responseBody[i].id === parseInt(pm.environment.get(\"userId\"))){",
+							"            pm.expect(responseBody[i].id).to.eql(parseInt(pm.environment.get(\"userId\")));",
+							"            pm.expect(responseBody[i].name).to.eql(pm.environment.get(\"userName\"));",
+							"            pm.expect(responseBody[i].email).to.eql(pm.environment.get(\"userEmail\"));",
+							"            pm.expect(responseBody[i].gender).to.eql(pm.environment.get(\"userGender\"));",
+							"            pm.expect(responseBody[i].status).to.eql(pm.environment.get(\"userStatus\"));",
+							"        }",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}users",
+					"host": [
+						"{{baseUrl}}users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get invalid user id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const schema = {",
+							"        type: \"object\",",
+							"        properties:{",
+							"         \"message\": {",
+							"            \"type\":\"string\"",
+							"             },",
+							"        },",
+							"        \"required\": [\"message\"]",
+							"    };",
+							"",
+							"",
+							"pm.test('Response schema type nodes verification', function() {",
+							"  pm.expect(tv4.validate(pm.response.json(), schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 2000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"pm.test('Validate error message for invalid user id', function() {",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson.message).to.eql(\"Resource not found\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}users/a1b2c3",
+					"host": [
+						"{{baseUrl}}users"
+					],
+					"path": [
+						"a1b2c3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update created user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const schema = {",
+							"        type: \"object\",",
+							"        properties:{",
+							"         \"id\": {",
+							"            \"type\":\"integer\"",
+							"             },",
+							"         \"name\": {",
+							"             \"type\":\"string\"",
+							"             },",
+							"         \"email\": {",
+							"             \"type\":\"string\"",
+							"            },",
+							"         \"gender\": {",
+							"             \"type\":\"string\"",
+							"            },",
+							"         \"status\": {",
+							"             \"type\":\"string\"",
+							"            }",
+							"        },",
+							"        \"required\": [\"id\", \"name\", \"email\", \"gender\", \"status\"]",
+							"    };",
+							"",
+							"",
+							"pm.test('Response schema type nodes verification', function() {",
+							"  pm.expect(tv4.validate(pm.response.json(), schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 2000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"pm.test('Validate data from user', function() {",
+							"    const requestBody = JSON.parse(pm.request.body.raw);",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson.id).to.eql(parseInt(pm.environment.get(\"userId\")));",
+							"    pm.expect(responseJson.name).to.eql(requestBody.name);",
+							"    pm.expect(responseJson.email).to.eql(requestBody.email);",
+							"    pm.expect(responseJson.gender).to.eql(pm.environment.get(\"userGender\"));",
+							"    pm.expect(responseJson.status).to.eql(pm.environment.get(\"userStatus\"));",
+							"});",
+							"",
+							"// Save updated user data",
+							"const jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"userName\", jsonData.name);",
+							"postman.setEnvironmentVariable(\"userEmail\", jsonData.email);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\":\"Ultra Success\", \"email\":\"ultra_success@mail.com\"}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}users/{{userId}}",
+					"host": [
+						"{{baseUrl}}users"
+					],
+					"path": [
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update invalid user id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const schema = {",
+							"        type: \"object\",",
+							"        properties:{",
+							"         \"message\": {",
+							"            \"type\":\"string\"",
+							"             },",
+							"        },",
+							"        \"required\": [\"message\"]",
+							"    };",
+							"",
+							"",
+							"pm.test('Response schema type nodes verification', function() {",
+							"  pm.expect(tv4.validate(pm.response.json(), schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 2000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"pm.test('Validate error message for invalid user id', function() {",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson.message).to.eql(\"Resource not found\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\":\"Ultra Success\", \"email\":\"ultra_success@mail.com\"}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}users/a1b2c3",
+					"host": [
+						"{{baseUrl}}users"
+					],
+					"path": [
+						"a1b2c3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get updated user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const schema = {",
+							"        type: \"object\",",
+							"        properties:{",
+							"         \"id\": {",
+							"            \"type\":\"integer\"",
+							"             },",
+							"         \"name\": {",
+							"             \"type\":\"string\"",
+							"             },",
+							"         \"email\": {",
+							"             \"type\":\"string\"",
+							"            },",
+							"         \"gender\": {",
+							"             \"type\":\"string\"",
+							"            },",
+							"         \"status\": {",
+							"             \"type\":\"string\"",
+							"            }",
+							"        },",
+							"        \"required\": [\"id\", \"name\", \"email\", \"gender\", \"status\"]",
+							"    };",
+							"",
+							"",
+							"pm.test('Response schema type nodes verification', function() {",
+							"  pm.expect(tv4.validate(pm.response.json(), schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 500ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);",
+							"});",
+							"",
+							"pm.test('Validate data from user', function() {",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson.id).to.eql(parseInt(pm.environment.get(\"userId\")));",
+							"    pm.expect(responseJson.name).to.eql(pm.environment.get(\"userName\"));",
+							"    pm.expect(responseJson.email).to.eql(pm.environment.get(\"userEmail\"));",
+							"    pm.expect(responseJson.gender).to.eql(pm.environment.get(\"userGender\"));",
+							"    pm.expect(responseJson.status).to.eql(pm.environment.get(\"userStatus\"));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}users/{{userId}}",
+					"host": [
+						"{{baseUrl}}users"
+					],
+					"path": [
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get list of users after update user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const schema = {",
+							"    \"type\": \"array\",",
+							"    \"items\": [{",
+							"        type: \"object\",",
+							"        properties:{",
+							"         \"id\": {",
+							"            \"type\":\"integer\"",
+							"             },",
+							"         \"name\": {",
+							"             \"type\":\"string\"",
+							"             },",
+							"         \"email\": {",
+							"             \"type\":\"string\"",
+							"            },",
+							"         \"gender\": {",
+							"             \"type\":\"string\"",
+							"            },",
+							"         \"status\": {",
+							"             \"type\":\"string\"",
+							"            }",
+							"        },",
+							"        \"required\": [\"id\", \"name\", \"email\", \"gender\", \"status\"]",
+							"    }]",
+							"};",
+							"",
+							"",
+							"pm.test('Response schema type nodes verification', function() {",
+							"  pm.expect(tv4.validate(pm.response.json(), schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 2000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"pm.test(\"Validate updated user is in the list\", function () {",
+							"    const responseBody = pm.response.json();",
+							"",
+							"    for(let i=0; i<responseBody.length; i++){",
+							"        if(responseBody[i].id === parseInt(pm.environment.get(\"userId\"))){",
+							"            pm.expect(responseBody[i].id).to.eql(parseInt(pm.environment.get(\"userId\")));",
+							"            pm.expect(responseBody[i].name).to.eql(pm.environment.get(\"userName\"));",
+							"            pm.expect(responseBody[i].email).to.eql(pm.environment.get(\"userEmail\"));",
+							"            pm.expect(responseBody[i].gender).to.eql(pm.environment.get(\"userGender\"));",
+							"            pm.expect(responseBody[i].status).to.eql(pm.environment.get(\"userStatus\"));",
+							"        }",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}users",
+					"host": [
+						"{{baseUrl}}users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete created user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 2000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}users/{{userId}}",
+					"host": [
+						"{{baseUrl}}users"
+					],
+					"path": [
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete invalid user id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const schema = {",
+							"        type: \"object\",",
+							"        properties:{",
+							"         \"message\": {",
+							"            \"type\":\"string\"",
+							"             },",
+							"        },",
+							"        \"required\": [\"message\"]",
+							"    };",
+							"",
+							"",
+							"pm.test('Response schema type nodes verification', function() {",
+							"  pm.expect(tv4.validate(pm.response.json(), schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 2000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"pm.test('Validate error message for invalid user id', function() {",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson.message).to.eql(\"Resource not found\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}users/a1b2c3",
+					"host": [
+						"{{baseUrl}}users"
+					],
+					"path": [
+						"a1b2c3"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{bearerToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://gorest.co.in/public/v2/",
+			"type": "default"
+		},
+		{
+			"key": "bearerToken",
+			"value": "TOKEN",
+			"type": "default"
+		}
+	]
+}
