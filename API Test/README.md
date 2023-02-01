@@ -29,7 +29,7 @@ To successfully run the API automation tests on Postman, you should first set th
 4. Open Postman application.
 5. Click on the imported collection name (API Automation).
 6. Select the "Variables" tab.
-7. On the "bearerToken" variable, paste the copied bearer token on the "Initial Value" and "Current Value" (Replace that "TOKEN" values).
+7. On the "bearerToken" variable, paste the copied bearer token on the "Initial Value" and "Current Value" (Replace those "TOKEN" values).
    ![Change the bearerToken variable value](../Images/API_test_config.png)
 8. Save changes.
 
