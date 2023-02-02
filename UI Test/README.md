@@ -29,11 +29,13 @@ After cloning the project in your local environment you should follow these step
 5. In case you are not in a macbook and for some reason Safari is not working locally after installing the supported browsers via command, please comment the `webkit` project in the `playwright.config.ts` file.
    ![Webkit Project](../Images/webkit_project_playwright_config.png)
 6. In case you don't want to see the browsers during the tests execution (enable headless mode), change the headless configuration from `false` to `true` in the `playwright.config.ts` file.
+
    ![Headless Config](../Images/headless_config_playwright_config.png)
 7. The test execution is configured to execute tests sequentially, in any case you want to test it in parallel please increase the workers number from `1` to `3` in the `playwright.config.ts` file.
+
    ![Workers Config](../Images/workers_config_playwright_config.png)
 
-**Important note: The HTML report is configured to be opened by default after the test execution finishes, it contains videos, traces, steps, statuses and screenshots in case of a failure.**
+**:warning: Important note: The HTML report is configured to be opened by default after the test execution finishes, it contains videos, traces, steps, statuses and screenshots in case of a failure.**
 
 ## Test Execution
 
@@ -46,8 +48,9 @@ To run the test execution follow these steps:
     npx playwright test
     ```
 4. When the test execution finishes, an HTML report file will be opened by default to show the test results.
+   ![UI Automation Tests Results](../Images/UI_tests_results.png)
 
-**Important note: The tests include snapshot comparison, in any case the images to compare are different from the current images (this can be due to the operation system that is being used), execute the following command:**
+**:warning: Important note: The tests include snapshot comparison, in any case the images to compare are different from the current images (this can be due to the operation system that is being used), execute the following command:**
 ```bash
 npx playwright test --update-snapshots
 ```
